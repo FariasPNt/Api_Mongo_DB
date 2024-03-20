@@ -1,4 +1,7 @@
 ﻿using ApiMongoDB.Models;
+using ApiMongoDB.Context;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
@@ -17,19 +20,29 @@ namespace ApiMongoDB.Services
 
         }
 
+        public async Task<UsuarioTeste> GetEmail(string email) =>
+            await _usuarioColletion.Find(x => x.Email == email).FirstOrDefaultAsync();
+        public async Task<UsuarioTeste> GetUsername(string userName) =>
+            await _usuarioColletion.Find(x => x.Login == userName).FirstOrDefaultAsync();
+
         public async Task<List<UsuarioTeste>> GetAsync() =>
             await _usuarioColletion.Find(x => true).ToListAsync();
 
         public async Task<UsuarioTeste> GetAsync(string id) =>
             await _usuarioColletion.Find(x => x.Id == id).FirstOrDefaultAsync();
 
-        public async Task CreatAsync(UsuarioTeste usuarioTeste) =>
-            await _usuarioColletion.InsertOneAsync(usuarioTeste);
+        public async Task CreatAsync(UsuarioTeste usuarioTeste) 
+        {
+
+                await _usuarioColletion.InsertOneAsync(usuarioTeste);
+            
+        }
 
         public async Task UpdateAsync(string id, UsuarioTeste usuarioTeste) =>
             await _usuarioColletion.ReplaceOneAsync(x => x.Id == id, usuarioTeste);
 
         public async Task RemoveAsync(string id) =>
             await _usuarioColletion.DeleteOneAsync(x => x.Id == id);
+
     }
 }
